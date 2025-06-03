@@ -47,8 +47,6 @@
 #include "mpegutils.h"
 #include "parser.h"
 
-extern int mark_flag;
-
 typedef struct H264ParseContext {
     ParseContext pc;
     H264ParamSets ps;

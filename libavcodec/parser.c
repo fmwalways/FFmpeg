@@ -74,6 +74,7 @@ extern AVCodecParser ff_vp3_parser;
 extern AVCodecParser ff_vp8_parser;
 extern AVCodecParser ff_vp9_parser;
 extern AVCodecParser ff_xma_parser;
+extern int mark_flag;
 
 #include "libavcodec/parser_list.c"
 
