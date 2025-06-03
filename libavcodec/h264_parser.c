@@ -47,6 +47,8 @@
 #include "mpegutils.h"
 #include "parser.h"
 
+extern int mark_flag;
+
 typedef struct H264ParseContext {
     ParseContext pc;
     H264ParamSets ps;
@@ -587,7 +589,7 @@ static int h264_parse(AVCodecParserContext *s,
     if (s->flags & PARSER_FLAG_COMPLETE_FRAMES) {
         next = buf_size;
     } else {
-        next = h264_find_frame_end(p, buf, buf_size, avctx);
+//         next = h264_find_frame_end(p, buf, buf_size, avctx);
 
         if (ff_combine_frame(pc, next, &buf, &buf_size) < 0) {
             *poutbuf      = NULL;
@@ -595,10 +597,10 @@ static int h264_parse(AVCodecParserContext *s,
             return buf_size;
         }
 
-        if (next < 0 && next != END_NOT_FOUND) {
-            av_assert1(pc->last_index + next >= 0);
-            h264_find_frame_end(p, &pc->buffer[pc->last_index + next], -next, avctx); // update state
-        }
+//         if (next < 0 && next != END_NOT_FOUND) {
+//             av_assert1(pc->last_index + next >= 0);
+//             h264_find_frame_end(p, &pc->buffer[pc->last_index + next], -next, avctx); // update state
+//         }
     }
 
     parse_nal_units(s, avctx, buf, buf_size);

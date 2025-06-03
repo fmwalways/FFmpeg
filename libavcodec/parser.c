@@ -262,7 +262,13 @@ int av_parser_parse2(AVCodecParserContext *s, AVCodecContext *avctx,
         s->frame_offset = s->next_frame_offset;
 
         /* offset of the next frame */
-        s->next_frame_offset = s->cur_offset + index;
+//         s->next_frame_offset = s->cur_offset + index;
+        //video frame don't plus index
+        if (avctx->codec_type == AVMEDIA_TYPE_VIDEO) {
+            s->next_frame_offset = s->cur_offset;
+        }else{
+            s->next_frame_offset = s->cur_offset + index;
+        }
         s->fetch_timestamp   = 1;
     }
     if (index < 0)
@@ -337,7 +343,7 @@ int ff_combine_frame(ParseContext *pc, int next,
     pc->last_index = pc->index;
 
     /* copy into buffer end return */
-    if (next == END_NOT_FOUND) {
+//     if (next == END_NOT_FOUND) {
         void *new_buffer = av_fast_realloc(pc->buffer, &pc->buffer_size,
                                            *buf_size + pc->index +
                                            AV_INPUT_BUFFER_PADDING_SIZE);
@@ -350,8 +356,11 @@ int ff_combine_frame(ParseContext *pc, int next,
         pc->buffer = new_buffer;
         memcpy(&pc->buffer[pc->index], *buf, *buf_size);
         pc->index += *buf_size;
-        return -1;
-    }
+//         return -1;
+        if(!mark_flag)
+            return -1;
+        next = 0;
+//     }
 
     av_assert0(next >= 0 || pc->buffer);
 

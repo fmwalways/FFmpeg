@@ -1465,7 +1465,7 @@ static int parse_packet(AVFormatContext *s, AVPacket *pkt, int stream_index)
         compute_pkt_fields(s, st, st->parser, pkt, AV_NOPTS_VALUE, AV_NOPTS_VALUE);
     }
 
-    while (size > 0 || (pkt == &flush_pkt && got_output)) {
+//     while (size > 0 || (pkt == &flush_pkt && got_output)) {
         int len;
         int64_t next_pts = pkt->pts;
         int64_t next_dts = pkt->dts;
@@ -1483,8 +1483,14 @@ static int parse_packet(AVFormatContext *s, AVPacket *pkt, int stream_index)
 
         got_output = !!out_pkt.size;
 
-        if (!out_pkt.size)
-            continue;
+        if (!out_pkt.size) {
+            av_packet_unref(&out_pkt);//release current packet
+            av_packet_unref(pkt);//release current packet
+            return 0;
+            // continue;
+        }
+
+
 
         if (pkt->buf && out_pkt.data == pkt->data) {
             /* reference pkt->buf only when out_pkt.data is guaranteed to point
@@ -1547,7 +1553,7 @@ static int parse_packet(AVFormatContext *s, AVPacket *pkt, int stream_index)
             av_packet_unref(&out_pkt);
             goto fail;
         }
-    }
+//     }
 
     /* end of the stream => close and free the parser */
     if (pkt == &flush_pkt) {

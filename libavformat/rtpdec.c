@@ -33,6 +33,8 @@
 
 #define MIN_FEEDBACK_INTERVAL 200000 /* 200 ms in us */
 
+int mark_flag;
+
 static RTPDynamicProtocolHandler l24_dynamic_handler = {
     .enc_name   = "L24",
     .codec_type = AVMEDIA_TYPE_AUDIO,
@@ -639,6 +641,7 @@ static int rtp_parse_packet_internal(RTPDemuxContext *s, AVPacket *pkt,
     payload_type = buf[1] & 0x7f;
     if (buf[1] & 0x80)
         flags |= RTP_FLAG_MARKER;
+    mark_flag = flags;
     seq       = AV_RB16(buf + 2);
     timestamp = AV_RB32(buf + 4);
     ssrc      = AV_RB32(buf + 8);
